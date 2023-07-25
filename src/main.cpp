@@ -1,9 +1,8 @@
-#include <iostream>
+#include "controller/todo_controller.h"
 
-using namespace std;
+int main() {
+    TodoController todoController;
+    todoController.run();
 
-int main()
-{
-	cout << "Hello CMake." << endl;
-	return 0;
+    return 0;
 }

@@ -13,16 +13,17 @@ project ("todo")
 
 include_directories (
   ${CMAKE_SOURCE_DIR}/src/external/sqlite
+  ${CMAKE_SOURCE_DIR}/src
 )
 
 # 将源代码添加到此项目的可执行文件。
 add_executable (${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/external/sqlite/sqlite3.c
-	"src/main.cpp"
-	"src/model/item.cpp"
-	"src/model/list.cpp"
-	"src/view/view.cpp"
-	"src/controller/controller.cpp"
+	${CMAKE_SOURCE_DIR}/src/main.cpp
+	${CMAKE_SOURCE_DIR}/src/model/todo_item.cpp
+	${CMAKE_SOURCE_DIR}/src/model/todo_list.cpp
+	${CMAKE_SOURCE_DIR}/src/view/todo_view.cpp
+	${CMAKE_SOURCE_DIR}/src/controller/todo_controller.cpp
 )
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
