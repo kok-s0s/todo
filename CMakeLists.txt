@@ -11,8 +11,19 @@ endif()
 
 project ("todo")
 
+include_directories (
+  ${CMAKE_SOURCE_DIR}/src/external/sqlite
+)
+
 # 将源代码添加到此项目的可执行文件。
-add_executable (todo "todo.cpp" "todo.h")
+add_executable (${PROJECT_NAME}
+	${CMAKE_SOURCE_DIR}/external/sqlite/sqlite3.c
+	"src/main.cpp"
+	"src/model/item.cpp"
+	"src/model/list.cpp"
+	"src/view/view.cpp"
+	"src/controller/controller.cpp"
+)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET todo PROPERTY CXX_STANDARD 20)
