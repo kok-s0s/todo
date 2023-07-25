@@ -1,8 +1,6 @@
 #ifndef TODO_CONTROLLER_H
 #define TODO_CONTROLLER_H
 
-#include <iostream>
-
 #include "model/todo_list.h"
 #include "view/todo_view.h"
 

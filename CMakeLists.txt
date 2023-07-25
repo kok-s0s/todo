@@ -12,7 +12,7 @@ endif()
 project ("todo")
 
 include_directories (
-  ${CMAKE_SOURCE_DIR}/src/external/sqlite
+  ${CMAKE_SOURCE_DIR}/external/sqlite
   ${CMAKE_SOURCE_DIR}/src
 )
 
