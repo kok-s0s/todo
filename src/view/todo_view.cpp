@@ -13,7 +13,7 @@ void TodoView::showTodoList(const std::vector<TodoItem> &todoItems) {
     } else {
       std::cout << "[ ] ";
     }
-    std::cout << item.getTitle() << std::endl;
+    std::cout << item.getContent() << std::endl;
     index++;
   }
 }
@@ -24,18 +24,20 @@ int TodoView::askForAction() {
   std::cout << "1. Add new todo" << std::endl;
   std::cout << "2. Remove todo" << std::endl;
   std::cout << "3. Mark todo as completed" << std::endl;
-  std::cout << "4. Exit" << std::endl;
+  std::cout << "4. Mark todo as uncompleted" << std::endl;
+  std::cout << "5. update todo's content" << std::endl;
+  std::cout << "6. Exit" << std::endl;
   std::cout << "Your choice: ";
   std::cin >> choice;
   return choice;
 }
 
-std::string TodoView::askForNewTodoTitle() {
-  std::string title;
-  std::cout << "\nEnter the title of the new todo: ";
+std::string TodoView::askForNewTodoContent() {
+  std::string content;
+  std::cout << "\nEnter the content of the new todo: ";
   std::cin.ignore();
-  std::getline(std::cin, title);
-  return title;
+  std::getline(std::cin, content);
+  return content;
 }
 
 int TodoView::askForTodoItemIndexToRemove() {
@@ -48,6 +50,20 @@ int TodoView::askForTodoItemIndexToRemove() {
 int TodoView::askForTodoIndexToMarkAsCompleted() {
   int id;
   std::cout << "\nEnter the ID of the todo to mark as completed: ";
+  std::cin >> id;
+  return id;
+}
+
+int TodoView::askForTodoIndexToMarkAsUnCompleted() {
+  int id;
+  std::cout << "\nEnter the ID of the todo to mark as uncompleted: ";
+  std::cin >> id;
+  return id;
+}
+
+int TodoView::askForTodoIndexToUpdateContent() {
+  int id;
+  std::cout << "\nEnter the ID of the todo to update content: ";
   std::cin >> id;
   return id;
 }

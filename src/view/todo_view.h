@@ -11,9 +11,11 @@ class TodoView {
 
   void showTodoList(const std::vector<TodoItem> &todoItems);
   int askForAction();
-  std::string askForNewTodoTitle();
+  std::string askForNewTodoContent();
   int askForTodoItemIndexToRemove();
   int askForTodoIndexToMarkAsCompleted();
+  int askForTodoIndexToMarkAsUnCompleted();
+  int askForTodoIndexToUpdateContent();
 };
 
 #endif  // TODO_VIEW_H

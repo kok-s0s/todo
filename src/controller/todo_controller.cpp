@@ -16,8 +16,8 @@ void TodoController::run() {
 
     switch (action) {
       case 1: {
-        std::string title = todoView_.askForNewTodoTitle();
-        todoList_.addTodoItem(title);
+        std::string content = todoView_.askForNewTodoContent();
+        todoList_.addTodoItem(content);
         break;
       }
       case 2: {
@@ -30,7 +30,20 @@ void TodoController::run() {
         todoList_.markTodoItemCompleted(todoItemIndex);
         break;
       }
-      case 4:
+      case 4: {
+        int todoItemIndex = todoView_.askForTodoIndexToMarkAsUnCompleted();
+        todoList_.markTodoItemUnCompleted(todoItemIndex);
+        break;
+      }
+      case 5: {
+        int todoItemIndex = todoView_.askForTodoIndexToUpdateContent();
+        std::string content;
+        std::cout << "\nEnter new content: ";
+        std::cin >> content;
+        todoList_.updateTodoItemContent(todoItemIndex, content);
+        break;
+      }
+      case 6:
         running = false;
         break;
       default:
