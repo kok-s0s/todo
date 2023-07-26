@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.8)
+﻿cmake_minimum_required(VERSION 3.16)
 
 # Enable Hot Reload for MSVC compilers if supported.
 if(POLICY CMP0141)
@@ -6,22 +6,30 @@ if(POLICY CMP0141)
 	set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-project(todo)
+project(todo VERSION 0.1.0 LANGUAGES C CXX)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
 
 include_directories(
 	${CMAKE_SOURCE_DIR}/external/sqlite
 	${CMAKE_SOURCE_DIR}/src
 )
 
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
+
 add_executable(${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/external/sqlite/sqlite3.c
 	${CMAKE_SOURCE_DIR}/src/main.cpp
+	${CMAKE_SOURCE_DIR}/src/todo_mainwindow.cpp
 	${CMAKE_SOURCE_DIR}/src/model/todo_item.cpp
 	${CMAKE_SOURCE_DIR}/src/model/todo_list.cpp
 	${CMAKE_SOURCE_DIR}/src/view/todo_view.cpp
 	${CMAKE_SOURCE_DIR}/src/controller/todo_controller.cpp
 )
 
-if(CMAKE_VERSION VERSION_GREATER 3.12)
-	set_property(TARGET todo PROPERTY CXX_STANDARD 20)
-endif()
+target_link_libraries(${PROJECT_NAME} Qt5::Widgets)
