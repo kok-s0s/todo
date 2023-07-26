@@ -5,14 +5,14 @@
 #include "view/todo_view.h"
 
 class TodoController {
-public:
-    TodoController();
+ public:
+  TodoController();
 
-    void run();
+  void run();
 
-private:
-    TodoList todoList_;
-    TodoView todoView_;
+ private:
+  TodoList todoList_;
+  TodoView todoView_;
 };
 
-#endif // TODO_CONTROLLER_H
+#endif  // TODO_CONTROLLER_H

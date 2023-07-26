@@ -1,8 +1,8 @@
 #include "controller/todo_controller.h"
 
 int main() {
-    TodoController todoController;
-    todoController.run();
+  TodoController todoController;
+  todoController.run();
 
-    return 0;
+  return 0;
 }

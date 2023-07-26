@@ -2,17 +2,18 @@
 #define TODO_VIEW_H
 
 #include <vector>
+
 #include "model/todo_item.h"
 
 class TodoView {
-public:
-    TodoView();
+ public:
+  TodoView();
 
-    void showTodoList(const std::vector<TodoItem>& todoItems);
-    int askForAction();
-    std::string askForNewTodoTitle();
-    int askForTodoIdToRemove();
-    int askForTodoIdToMarkAsCompleted();
+  void showTodoList(const std::vector<TodoItem> &todoItems);
+  int askForAction();
+  std::string askForNewTodoTitle();
+  int askForTodoIdToRemove();
+  int askForTodoIdToMarkAsCompleted();
 };
 
-#endif // TODO_VIEW_H
+#endif  // TODO_VIEW_H
