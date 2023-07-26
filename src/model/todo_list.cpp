@@ -205,4 +205,21 @@ void TodoList::updateTodoItemContent(int todoItemIndex,
   }
 }
 
+void TodoList::deleteAllTodos() {
+  if (!db_) {
+    return;
+  }
+
+  // Delete all todo items from the 'todo_items' table
+  const char *deleteAllSQL = "DELETE FROM todo_items;";
+  int rc = sqlite3_exec(db_, deleteAllSQL, nullptr, nullptr, nullptr);
+
+  if (rc != SQLITE_OK) {
+    std::cout << "Error deleting all todo items: " << sqlite3_errmsg(db_)
+              << std::endl;
+  } else {
+    todoItems_.clear();
+  }
+}
+
 std::vector<TodoItem> &TodoList::getTodoItems() { return todoItems_; }

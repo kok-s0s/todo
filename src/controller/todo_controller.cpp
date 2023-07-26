@@ -43,7 +43,12 @@ void TodoController::run() {
         todoList_.updateTodoItemContent(todoItemIndex, content);
         break;
       }
-      case 6:
+      case 6: {
+        todoList_.deleteAllTodos();
+        std::cout << "\nDeleted." << std::endl;
+        break;
+      }
+      case 7:
         running = false;
         break;
       default:

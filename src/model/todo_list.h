@@ -18,6 +18,7 @@ class TodoList {
   void markTodoItemCompleted(int todoItemIndex);
   void markTodoItemUnCompleted(int todoItemIndex);
   void updateTodoItemContent(int todoItemIndex, const std::string &newContent);
+  void deleteAllTodos();
   std::vector<TodoItem> &getTodoItems();
 
  private:

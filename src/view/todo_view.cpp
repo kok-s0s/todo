@@ -5,7 +5,7 @@
 TodoView::TodoView() {}
 
 void TodoView::showTodoList(const std::vector<TodoItem> &todoItems) {
-  std::cout << "Todo List:" << std::endl;
+  std::cout << "=-= Todo List =-=" << std::endl;
   for (size_t index = 0; const auto &item : todoItems) {
     std::cout << "[" << index + 1 << "] ";
     if (item.isCompleted()) {
@@ -25,8 +25,9 @@ int TodoView::askForAction() {
   std::cout << "2. Remove todo" << std::endl;
   std::cout << "3. Mark todo as completed" << std::endl;
   std::cout << "4. Mark todo as uncompleted" << std::endl;
-  std::cout << "5. update todo's content" << std::endl;
-  std::cout << "6. Exit" << std::endl;
+  std::cout << "5. Update todo's content" << std::endl;
+  std::cout << "6. Delete all todos" << std::endl;
+  std::cout << "7. Exit" << std::endl;
   std::cout << "Your choice: ";
   std::cin >> choice;
   return choice;
