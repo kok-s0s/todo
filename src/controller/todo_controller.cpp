@@ -21,13 +21,13 @@ void TodoController::run() {
         break;
       }
       case 2: {
-        int todoId = todoView_.askForTodoIdToRemove();
-        todoList_.removeTodoItem(todoId);
+        int todoItemIndex = todoView_.askForTodoItemIndexToRemove();
+        todoList_.removeTodoItem(todoItemIndex);
         break;
       }
       case 3: {
-        int todoId = todoView_.askForTodoIdToMarkAsCompleted();
-        todoList_.markTodoItemCompleted(todoId);
+        int todoItemIndex = todoView_.askForTodoIndexToMarkAsCompleted();
+        todoList_.markTodoItemCompleted(todoItemIndex);
         break;
       }
       case 4:

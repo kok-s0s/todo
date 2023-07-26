@@ -6,14 +6,15 @@ TodoView::TodoView() {}
 
 void TodoView::showTodoList(const std::vector<TodoItem> &todoItems) {
   std::cout << "Todo List:" << std::endl;
-  for (const auto &item : todoItems) {
-    std::cout << "[" << item.getId() << "] ";
+  for (size_t index = 0; const auto &item : todoItems) {
+    std::cout << "[" << index + 1 << "] ";
     if (item.isCompleted()) {
       std::cout << "[X] ";
     } else {
       std::cout << "[ ] ";
     }
     std::cout << item.getTitle() << std::endl;
+    index++;
   }
 }
 
@@ -37,14 +38,14 @@ std::string TodoView::askForNewTodoTitle() {
   return title;
 }
 
-int TodoView::askForTodoIdToRemove() {
+int TodoView::askForTodoItemIndexToRemove() {
   int id;
   std::cout << "\nEnter the ID of the todo to remove: ";
   std::cin >> id;
   return id;
 }
 
-int TodoView::askForTodoIdToMarkAsCompleted() {
+int TodoView::askForTodoIndexToMarkAsCompleted() {
   int id;
   std::cout << "\nEnter the ID of the todo to mark as completed: ";
   std::cin >> id;
