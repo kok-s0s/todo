@@ -9,6 +9,7 @@ class TodoController {
   TodoController();
 
   void run();
+  void clearTerminal();
 
  private:
   TodoList todoList_;

@@ -4,6 +4,19 @@
 
 #include <iostream>
 
+#if defined(_WIN32) || defined(_WIN64)
+#define OS_WINDOWS
+#include <windows.h>
+#elif defined(__unix__) || defined(__unix)
+#define OS_UNIX
+#include <cstdlib>
+#elif defined(__APPLE__) || defined(__MACH__)
+#define OS_MACOS
+#include <cstdlib>
+#else
+#error "Unsupported operating system"
+#endif
+
 TodoController::TodoController() {}
 
 void TodoController::run() {
@@ -55,5 +68,25 @@ void TodoController::run() {
         std::cout << "Invalid choice. Please try again." << std::endl;
         break;
     }
+
+    clearTerminal();
   }
+}
+
+void TodoController::clearTerminal() {
+#ifdef OS_WINDOWS
+  HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+  CONSOLE_SCREEN_BUFFER_INFO csbi;
+  GetConsoleScreenBufferInfo(hStdOut, &csbi);
+  COORD coord = {0, 0};
+  DWORD dwCharsWritten;
+  DWORD dwConSize = csbi.dwSize.X * csbi.dwSize.Y;
+  FillConsoleOutputCharacter(hStdOut, ' ', dwConSize, coord, &dwCharsWritten);
+  GetConsoleScreenBufferInfo(hStdOut, &csbi);
+  FillConsoleOutputAttribute(hStdOut, csbi.wAttributes, dwConSize, coord,
+                             &dwCharsWritten);
+  SetConsoleCursorPosition(hStdOut, coord);
+#elif defined(OS_UNIX) || defined(OS_MACOS)
+  std::system("clear");
+#endif
 }
