@@ -31,21 +31,25 @@ void TodoController::run() {
       case 1: {
         std::string content = todoView_.askForNewTodoContent();
         todoList_.addTodoItem(content);
+        clearTerminal();
         break;
       }
       case 2: {
         int todoItemIndex = todoView_.askForTodoItemIndexToRemove();
         todoList_.removeTodoItem(todoItemIndex);
+        clearTerminal();
         break;
       }
       case 3: {
         int todoItemIndex = todoView_.askForTodoIndexToMarkAsCompleted();
         todoList_.markTodoItemCompleted(todoItemIndex);
+        clearTerminal();
         break;
       }
       case 4: {
         int todoItemIndex = todoView_.askForTodoIndexToMarkAsUnCompleted();
         todoList_.markTodoItemUnCompleted(todoItemIndex);
+        clearTerminal();
         break;
       }
       case 5: {
@@ -54,22 +58,48 @@ void TodoController::run() {
         std::cout << "\nEnter new content: ";
         std::cin >> content;
         todoList_.updateTodoItemContent(todoItemIndex, content);
+        clearTerminal();
         break;
       }
       case 6: {
         todoList_.deleteAllTodos();
         std::cout << "\nDeleted." << std::endl;
+        clearTerminal();
         break;
       }
-      case 7:
+      case 7: {
+        clearTerminal();
+        std::cout << "\n $$$$$$\\                            $$\\     $$\\     "
+                     "              $$\\ ";
+        std::cout << "\n$$  __$$\\                           \\$$\\   $$  |    "
+                     "              $$ |";
+        std::cout << "\n$$ /  \\__| $$$$$$\\   $$$$$$\\         \\$$\\ $$  "
+                     "/$$$$$$\\  $$\\   $$\\ $$ |";
+        std::cout << "\n\\$$$$$$\\  $$  __$$\\ $$  __$$\\         \\$$$$  /$$  "
+                     "__$$\\ $$ |  $$ |$$ |";
+        std::cout << "\n \\____$$\\ $$$$$$$$ |$$$$$$$$ |         \\$$  / $$ /  "
+                     "$$ |$$ |  $$ |\\__|";
+        std::cout << "\n$$\\   $$ |$$   ____|$$   ____|          $$ |  $$ |  "
+                     "$$ |$$ |  $$ |    ";
+        std::cout << "\n\\$$$$$$  |\\$$$$$$$\\ \\$$$$$$$\\           $$ |  "
+                     "\\$$$$$$  |\\$$$$$$  |$$\\ ";
+        std::cout << "\n \\______/  \\_______| \\_______|          \\__|   "
+                     "\\______/  \\______/ \\__|";
+        std::cout << "\n                                                       "
+                     "               ";
+        std::cout << "\n                                                       "
+                     "               ";
+        std::cout << "\n                                                       "
+                     "               "
+                  << std::endl;
         running = false;
         break;
+      }
       default:
+        clearTerminal();
         std::cout << "Invalid choice. Please try again." << std::endl;
         break;
     }
-
-    clearTerminal();
   }
 }
 

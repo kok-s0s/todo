@@ -19,7 +19,7 @@ void TodoView::showTodoList(const std::vector<TodoItem> &todoItems) {
 }
 
 int TodoView::askForAction() {
-  int choice;
+  std::string choice;
   std::cout << "\nChoose an action:" << std::endl;
   std::cout << "1. Add new todo" << std::endl;
   std::cout << "2. Remove todo" << std::endl;
@@ -30,7 +30,12 @@ int TodoView::askForAction() {
   std::cout << "7. Exit" << std::endl;
   std::cout << "Your choice: ";
   std::cin >> choice;
-  return choice;
+  int iChoice = std::atoi(choice.c_str());
+  if (iChoice >= 1 && iChoice <= 7) {
+    return iChoice;
+  } else {
+    return 8;
+  }
 }
 
 std::string TodoView::askForNewTodoContent() {
