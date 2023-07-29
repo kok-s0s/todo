@@ -39,44 +39,52 @@ int TodoView::askForAction() {
 }
 
 std::string TodoView::askForNewTodoContent() {
-  std::string content;
-  std::cout << "\nEnter the content of the new todo: ";
-  std::cin.ignore();
-  std::getline(std::cin, content);
-  return content;
+  return getContent("\nEnter the content of the new todo: ");
 }
 
 int TodoView::askForTodoItemIndexToRemove() {
-  int id;
-  std::cout << "\nEnter the ID of the todo to remove: ";
-  std::cin >> id;
-  return id;
+  return getValidIntegerInput("\nEnter the ID of the todo to remove: ");
 }
 
 int TodoView::askForTodoIndexToMarkAsCompleted() {
-  int id;
-  std::cout << "\nEnter the ID of the todo to mark as completed: ";
-  std::cin >> id;
-  return id;
+  return getValidIntegerInput(
+      "\nEnter the ID of the todo to mark as completed: ");
 }
 
 int TodoView::askForTodoIndexToMarkAsUnCompleted() {
-  int id;
-  std::cout << "\nEnter the ID of the todo to mark as uncompleted: ";
-  std::cin >> id;
-  return id;
+  return getValidIntegerInput(
+      "\nEnter the ID of the todo to mark as uncompleted: ");
 }
 
 int TodoView::askForTodoIndexToUpdateContent() {
-  int id;
-  std::cout << "\nEnter the ID of the todo to update content: ";
-  std::cin >> id;
-  return id;
+  return getValidIntegerInput("\nEnter the ID of the todo to update content: ");
 }
 
 std::string TodoView::askForNewContentToUpdateContent() {
+  return getContent("\nEnter the content to update: ");
+}
+
+int TodoView::getValidIntegerInput(const std::string &prompt) {
+  int value;
+  while (true) {
+    std::cout << prompt;
+    if (std::cin >> value) {
+      // Check if there are any remaining characters in the input buffer
+      if (std::cin.peek() == '\n') {
+        break;
+      }
+    }
+    // Clear the error flag and flush the input buffer
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cout << "Invalid input. Please enter a valid integer.\n";
+  }
+  return value;
+}
+
+std::string TodoView::getContent(const std::string &prompt) {
   std::string content;
-  std::cout << "\nEnter the content to update: ";
+  std::cout << prompt;
   std::cin.ignore();
   std::getline(std::cin, content);
   return content;
