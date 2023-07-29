@@ -54,10 +54,9 @@ void TodoController::run() {
       }
       case 5: {
         int todoItemIndex = todoView_.askForTodoIndexToUpdateContent();
-        std::string content;
-        std::cout << "\nEnter new content: ";
-        std::cin >> content;
+        std::string content = todoView_.askForNewContentToUpdateContent();
         todoList_.updateTodoItemContent(todoItemIndex, content);
+        todoList_.markTodoItemUnCompleted(todoItemIndex);
         clearTerminal();
         break;
       }

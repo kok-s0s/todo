@@ -16,6 +16,7 @@ class TodoView {
   int askForTodoIndexToMarkAsCompleted();
   int askForTodoIndexToMarkAsUnCompleted();
   int askForTodoIndexToUpdateContent();
+  std::string askForNewContentToUpdateContent();
 };
 
 #endif  // TODO_VIEW_H

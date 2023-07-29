@@ -73,3 +73,11 @@ int TodoView::askForTodoIndexToUpdateContent() {
   std::cin >> id;
   return id;
 }
+
+std::string TodoView::askForNewContentToUpdateContent() {
+  std::string content;
+  std::cout << "\nEnter the content to update: ";
+  std::cin.ignore();
+  std::getline(std::cin, content);
+  return content;
+}
