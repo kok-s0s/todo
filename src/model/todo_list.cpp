@@ -1,7 +1,5 @@
 #include "todo_list.h"
 
-#include <sqlite3.h>
-
 #include <iostream>
 
 TodoList::TodoList() : db_(nullptr) {

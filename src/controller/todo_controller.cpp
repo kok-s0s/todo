@@ -1,7 +1,5 @@
 #include "todo_controller.h"
 
-#include <sqlite3.h>
-
 #include <iostream>
 
 #if defined(_WIN32) || defined(_WIN64)
