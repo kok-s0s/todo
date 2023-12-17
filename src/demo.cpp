@@ -34,13 +34,13 @@ int main(int argc, char* argv[]) {
       "Hello World", [&] {}, ButtonStyle());
 
   auto btn_reset = Button(
-      "ReSet", [&] { todoList_.deleteAllTodos(); }, ButtonStyle());
+      "ReSet", [&] { todoList_.DeleteAllTodoItems(); }, ButtonStyle());
 
   std::string todo_content;
   Component input_todo_content = Input(&todo_content, "todo content");
 
   auto btn_add = Button(
-      "Add", [&] { todoList_.addTodoItem(todo_content); }, ButtonStyle());
+      "Add", [&] { todoList_.AddTodoItem(todo_content); }, ButtonStyle());
 
   auto main_container = Container::Vertical({
       Container::Horizontal({btn_hello_workd}),

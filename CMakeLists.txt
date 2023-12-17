@@ -20,10 +20,10 @@ add_subdirectory(external/FTXUI)
 
 add_executable(${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/external/sqlite/sqlite3.c
-	# ${CMAKE_SOURCE_DIR}/src/main.cpp
-	${CMAKE_SOURCE_DIR}/src/demo.cpp
+	${CMAKE_SOURCE_DIR}/src/main.cpp
 	${CMAKE_SOURCE_DIR}/src/todo_item.cpp
 	${CMAKE_SOURCE_DIR}/src/todo_list.cpp
+	${CMAKE_SOURCE_DIR}/src/todo_tui.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

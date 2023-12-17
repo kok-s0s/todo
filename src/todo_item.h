@@ -7,11 +7,11 @@ class TodoItem {
  public:
   TodoItem(int id, const std::string &content, bool completed);
 
-  int getId() const;
-  std::string getContent() const;
-  void setContent(std::string content);
-  bool isCompleted() const;
-  void setCompleted(bool completed);
+  int GetId() const;
+  std::string GetContent() const;
+  void SetContent(std::string content);
+  bool IsCompleted() const;
+  void SetCompleted(bool completed);
 
  private:
   int id_;

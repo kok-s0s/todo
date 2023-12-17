@@ -22,7 +22,7 @@ TodoList::TodoList() : db_(nullptr) {
     if (rc != SQLITE_OK) {
       std::cout << "Error creating table: " << sqlite3_errmsg(db_) << std::endl;
     } else {
-      loadTodoItemsFromDatabase();
+      LoadTodoItemsFromDatabase();
     }
   }
 }
@@ -33,12 +33,11 @@ TodoList::~TodoList() {
   }
 }
 
-void TodoList::loadTodoItemsFromDatabase() {
+void TodoList::LoadTodoItemsFromDatabase() {
   if (!db_) {
     return;
   }
 
-  // Read todo items from the 'todo_items' table and update todoItems_
   const char *selectSQL = "SELECT id, title, completed FROM todo_items;";
   sqlite3_stmt *stmt;
 
@@ -59,12 +58,11 @@ void TodoList::loadTodoItemsFromDatabase() {
   }
 }
 
-void TodoList::addTodoItem(const std::string &title) {
+void TodoList::AddTodoItem(const std::string &title) {
   if (!db_) {
     return;
   }
 
-  // Insert the new todo item into the 'todo_items' table with AUTOINCREMENT id
   std::string insertSQL =
       "INSERT INTO todo_items (title, completed) VALUES ('" + title + "', 0);";
 
@@ -80,128 +78,110 @@ void TodoList::addTodoItem(const std::string &title) {
   }
 }
 
-void TodoList::removeTodoItem(int todoItemIndex) {
+void TodoList::RemoveTodoItem(int todoItemId) {
   if (!db_) {
     return;
   }
 
-  if (0 < todoItemIndex && todoItemIndex <= todoItems_.size()) {
-    // Delete the todo item from the 'todo_items' table
-    std::string deleteSQL =
-        "DELETE FROM todo_items WHERE id = " +
-        std::to_string(
-            todoItems_[static_cast<std::vector<
-                           TodoItem, std::allocator<TodoItem>>::size_type>(
-                           todoItemIndex) -
-                       1]
-                .getId()) +
-        ";";
+  std::string deleteSQL =
+      "DELETE FROM todo_items WHERE id = " + std::to_string(todoItemId) + ";";
 
-    int rc = sqlite3_exec(db_, deleteSQL.c_str(), nullptr, nullptr, nullptr);
+  int rc = sqlite3_exec(db_, deleteSQL.c_str(), nullptr, nullptr, nullptr);
 
-    if (rc != SQLITE_OK) {
-      std::cout << "Error deleting todo item: " << sqlite3_errmsg(db_)
-                << std::endl;
-    } else {
-      todoItems_.erase(todoItems_.begin() + todoItemIndex - 1);
-    }
+  if (rc != SQLITE_OK) {
+    std::cout << "Error deleting todo item: " << sqlite3_errmsg(db_)
+              << std::endl;
+  } else {
+    todoItems_.erase(std::remove_if(todoItems_.begin(), todoItems_.end(),
+                                    [&todoItemId](const TodoItem &todoItem) {
+                                      return todoItem.GetId() == todoItemId;
+                                    }),
+                     todoItems_.end());
   }
 }
 
-void TodoList::markTodoItemCompleted(int todoItemIndex) {
+void TodoList::ToggleTodoItemIsCompleted(int id) {
+  auto found_todo_item = std::find_if(
+      todoItems_.begin(), todoItems_.end(),
+      [&id](const TodoItem &todoItem) { return todoItem.GetId() == id; });
+
+  if (found_todo_item != todoItems_.end())
+    found_todo_item->SetCompleted(!found_todo_item->IsCompleted());
+}
+
+void TodoList::MarkTodoItemCompleted(int todoItemId) {
   if (!db_) {
     return;
   }
 
-  if (0 < todoItemIndex && todoItemIndex <= todoItems_.size()) {
-    // Update the completion status of the todo item in the 'todo_items' table
-    std::string updateSQL =
-        "UPDATE todo_items SET completed = 1 WHERE id = " +
-        std::to_string(
-            todoItems_[static_cast<std::vector<
-                           TodoItem, std::allocator<TodoItem>>::size_type>(
-                           todoItemIndex) -
-                       1]
-                .getId()) +
-        ";";
+  // Update the completion status of the todo item in the 'todo_items' table
+  std::string updateSQL = "UPDATE todo_items SET completed = 1 WHERE id = " +
+                          std::to_string(todoItemId) + ";";
 
-    int rc = sqlite3_exec(db_, updateSQL.c_str(), nullptr, nullptr, nullptr);
+  int rc = sqlite3_exec(db_, updateSQL.c_str(), nullptr, nullptr, nullptr);
 
-    if (rc != SQLITE_OK) {
-      std::cout << "Error updating todo item: " << sqlite3_errmsg(db_)
-                << std::endl;
-    } else {
-      todoItems_[static_cast<std::vector<TodoItem, std::allocator<TodoItem>>::
-                                 size_type>(todoItemIndex) -
-                 1]
-          .setCompleted(true);
-    }
+  if (rc != SQLITE_OK) {
+    std::cout << "Error updating todo item: " << sqlite3_errmsg(db_)
+              << std::endl;
+  } else {
+    auto found_todo_item =
+        std::find_if(todoItems_.begin(), todoItems_.end(),
+                     [&todoItemId](const TodoItem &todoItem) {
+                       return todoItem.GetId() == todoItemId;
+                     });
+
+    if (found_todo_item != todoItems_.end())
+      found_todo_item->SetCompleted(true);
   }
 }
 
-void TodoList::markTodoItemUnCompleted(int todoItemIndex) {
+void TodoList::MarkTodoItemUnCompleted(int todoItemId) {
   if (!db_) {
     return;
   }
 
-  if (0 < todoItemIndex && todoItemIndex <= todoItems_.size()) {
-    // Update the completion status of the todo item in the 'todo_items' table
-    std::string updateSQL =
-        "UPDATE todo_items SET completed = 0 WHERE id = " +
-        std::to_string(
-            todoItems_[static_cast<std::vector<
-                           TodoItem, std::allocator<TodoItem>>::size_type>(
-                           todoItemIndex) -
-                       1]
-                .getId()) +
-        ";";
+  // Update the completion status of the todo item in the 'todo_items' table
+  std::string updateSQL = "UPDATE todo_items SET completed = 0 WHERE id = " +
+                          std::to_string(todoItemId) + ";";
 
-    int rc = sqlite3_exec(db_, updateSQL.c_str(), nullptr, nullptr, nullptr);
+  int rc = sqlite3_exec(db_, updateSQL.c_str(), nullptr, nullptr, nullptr);
 
-    if (rc != SQLITE_OK) {
-      std::cout << "Error updating todo item: " << sqlite3_errmsg(db_)
-                << std::endl;
-    } else {
-      todoItems_[static_cast<std::vector<TodoItem, std::allocator<TodoItem>>::
-                                 size_type>(todoItemIndex) -
-                 1]
-          .setCompleted(false);
-    }
+  if (rc != SQLITE_OK) {
+    std::cout << "Error updating todo item: " << sqlite3_errmsg(db_)
+              << std::endl;
+  } else {
+    auto found_todo_item =
+        std::find_if(todoItems_.begin(), todoItems_.end(),
+                     [&todoItemId](const TodoItem &todoItem) {
+                       return todoItem.GetId() == todoItemId;
+                     });
+
+    if (found_todo_item != todoItems_.end())
+      found_todo_item->SetCompleted(false);
   }
 }
 
-void TodoList::updateTodoItemContent(int todoItemIndex,
+void TodoList::UpdateTodoItemContent(int todoItemId,
                                      const std::string &newContent) {
   if (!db_) {
     return;
   }
 
-  if (0 < todoItemIndex && todoItemIndex <= todoItems_.size()) {
-    int itemId =
-        todoItems_[static_cast<std::vector<TodoItem, std::allocator<TodoItem>>::
-                                   size_type>(todoItemIndex) -
-                   1]
-            .getId();
+  // Update the title of the todo item in the 'todo_items' table
+  std::string updateSQL = "UPDATE todo_items SET title = '" + newContent +
+                          "' WHERE id = " + std::to_string(todoItemId) + ";";
 
-    // Update the title of the todo item in the 'todo_items' table
-    std::string updateSQL = "UPDATE todo_items SET title = '" + newContent +
-                            "' WHERE id = " + std::to_string(itemId) + ";";
+  int rc = sqlite3_exec(db_, updateSQL.c_str(), nullptr, nullptr, nullptr);
 
-    int rc = sqlite3_exec(db_, updateSQL.c_str(), nullptr, nullptr, nullptr);
-
-    if (rc != SQLITE_OK) {
-      std::cout << "Error updating todo item: " << sqlite3_errmsg(db_)
-                << std::endl;
-    } else {
-      todoItems_[static_cast<std::vector<TodoItem, std::allocator<TodoItem>>::
-                                 size_type>(todoItemIndex) -
-                 1]
-          .setContent(newContent);
-    }
+  if (rc != SQLITE_OK) {
+    std::cout << "Error updating todo item: " << sqlite3_errmsg(db_)
+              << std::endl;
+  } else {
+    // todoItems_[todoItemIndex].SetContent(newContent);
   }
 }
 
-void TodoList::deleteAllTodos() {
+void TodoList::DeleteAllTodoItems() {
   if (!db_) {
     return;
   }
@@ -218,4 +198,4 @@ void TodoList::deleteAllTodos() {
   }
 }
 
-std::vector<TodoItem> &TodoList::getTodoItems() { return todoItems_; }
+std::vector<TodoItem> &TodoList::GetAllTodoItems() { return todoItems_; }

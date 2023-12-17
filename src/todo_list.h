@@ -12,14 +12,15 @@ class TodoList {
   TodoList();
   ~TodoList();
 
-  void loadTodoItemsFromDatabase();
-  void addTodoItem(const std::string &title);
-  void removeTodoItem(int todoItemIndex);
-  void markTodoItemCompleted(int todoItemIndex);
-  void markTodoItemUnCompleted(int todoItemIndex);
-  void updateTodoItemContent(int todoItemIndex, const std::string &newContent);
-  void deleteAllTodos();
-  std::vector<TodoItem> &getTodoItems();
+  void LoadTodoItemsFromDatabase();
+  void AddTodoItem(const std::string &title);
+  void RemoveTodoItem(int todoItemId);
+  void ToggleTodoItemIsCompleted(int todoItemId);
+  void MarkTodoItemCompleted(int todoItemId);
+  void MarkTodoItemUnCompleted(int todoItemId);
+  void UpdateTodoItemContent(int todoItemId, const std::string &newContent);
+  void DeleteAllTodoItems();
+  std::vector<TodoItem> &GetAllTodoItems();
 
  private:
   std::vector<TodoItem> todoItems_;
