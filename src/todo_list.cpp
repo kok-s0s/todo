@@ -9,8 +9,6 @@ TodoList::TodoList() : db_(nullptr) {
     std::cout << "Can't open database: " << sqlite3_errmsg(db_) << std::endl;
     db_ = nullptr;  // Set db_ to nullptr on failure
   } else {
-    std::cout << "Opened database successfully" << std::endl;
-
     // Create the 'todo_items' table if it doesn't exist
     const char *createTableSQL =
         "CREATE TABLE IF NOT EXISTS todo_items ("
