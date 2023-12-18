@@ -14,8 +14,7 @@ class TodoTui {
 
  private:
   ftxui::Component NewTodoForm();
-  ftxui::Component TodoItemComponent(const TodoItem &todo_item,
-                                     const int &todo_item_index);
+  ftxui::Component TodoItemComponent(TodoItem todo_item, int todo_item_index);
   void ReloadTodoListComponent();
 
  private:

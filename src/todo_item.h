@@ -5,17 +5,17 @@
 
 class TodoItem {
  public:
-  TodoItem(int id, const std::string &content, bool completed);
+  TodoItem(int id, const std::string &text, bool completed);
 
   int GetId() const;
-  std::string GetContent() const;
-  void SetContent(std::string content);
+  std::string GetText() const;
+  void SetText(std::string text);
   bool IsCompleted() const;
   void SetCompleted(bool completed);
 
  private:
   int id_;
-  std::string content_;
+  std::string text_;
   bool completed_;
 };
 

@@ -1,13 +1,13 @@
 #include "todo_item.h"
 
-TodoItem::TodoItem(int id, const std::string &content, bool completed)
-    : id_(id), content_(content), completed_(completed) {}
+TodoItem::TodoItem(int id, const std::string &text, bool completed)
+    : id_(id), text_(text), completed_(completed) {}
 
 int TodoItem::GetId() const { return id_; }
 
-std::string TodoItem::GetContent() const { return content_; }
+std::string TodoItem::GetText() const { return text_; }
 
-void TodoItem::SetContent(std::string content) { content_ = content; }
+void TodoItem::SetText(std::string text) { text_ = text; }
 
 bool TodoItem::IsCompleted() const { return completed_; }
 

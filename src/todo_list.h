@@ -14,16 +14,14 @@ class TodoList {
 
   void LoadTodoItemsFromDatabase();
   void AddTodoItem(const std::string &title);
-  void RemoveTodoItem(int todoItemId);
-  void ToggleTodoItemIsCompleted(int todoItemId);
-  void MarkTodoItemCompleted(int todoItemId);
-  void MarkTodoItemUnCompleted(int todoItemId);
-  void UpdateTodoItemContent(int todoItemId, const std::string &newContent);
+  void RemoveTodoItem(int todo_item_id);
+  void ToggleTodoItemIsCompleted(int todo_item_id);
+  void UpdateTodoItemText(int todo_item_id, const std::string &new_todo_text);
   void DeleteAllTodoItems();
   std::vector<TodoItem> &GetAllTodoItems();
 
  private:
-  std::vector<TodoItem> todoItems_;
+  std::vector<TodoItem> todo_items_;
   sqlite3 *db_;
 };
 
