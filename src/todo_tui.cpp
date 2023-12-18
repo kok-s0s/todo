@@ -142,26 +142,13 @@ ftxui::Component TodoTui::BottomBar() {
         return ftxui::hbox({std::move(element)});
       });
 
-  auto exit_button = ftxui::Button(
-                         "* Exit *",
-                         [&] {
-                           std::cout
-                               << "\033[2J\033[1;1H";  // ANSI escape codes for
-                                                       // clearing the screen.
-                           exit(0);
-                         },
-                         ftxui::ButtonOption::Ascii()) |
-                     ftxui::color(ftxui::Color::Red) |
-                     ftxui::Renderer([](ftxui::Element element) {
-                       return ftxui::hbox({std::move(element)});
-                     });
-
   auto renderer_non_focusable =
       ftxui::Renderer([&] { return ftxui::text("Have Fun!") | ftxui::center; });
 
-  return ftxui::Container::Horizontal({delete_all_todo_items_button,
-                                       renderer_non_focusable | ftxui::flex,
-                                       exit_button}) |
+  return ftxui::Container::Horizontal({
+             delete_all_todo_items_button,
+             renderer_non_focusable | ftxui::flex,
+         }) |
          ftxui::border;
 }
 
