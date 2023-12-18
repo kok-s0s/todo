@@ -71,7 +71,6 @@ void TodoList::AddTodoItem(const std::string &title) {
     std::cout << "Error inserting todo item: " << sqlite3_errmsg(db_)
               << std::endl;
   } else {
-    // Read the automatically generated id for the newly inserted todo item
     int newId = static_cast<int>(sqlite3_last_insert_rowid(db_));
     todo_items_.emplace_back(newId, title, false);
   }
@@ -92,10 +91,10 @@ void TodoList::RemoveTodoItem(int todo_item_id) {
               << std::endl;
   } else {
     todo_items_.erase(std::remove_if(todo_items_.begin(), todo_items_.end(),
-                                    [&todo_item_id](const TodoItem &todoItem) {
-                                      return todoItem.GetId() == todo_item_id;
-                                    }),
-                     todo_items_.end());
+                                     [&todo_item_id](const TodoItem &todoItem) {
+                                       return todoItem.GetId() == todo_item_id;
+                                     }),
+                      todo_items_.end());
   }
 }
 
@@ -128,15 +127,16 @@ void TodoList::ToggleTodoItemIsCompleted(int todo_item_id) {
   }
 }
 
-void TodoList::UpdateTodoItemText(int todo_item_id,
+void TodoList::UpdateTodoItemText(int todo_item_index,
                                   const std::string &new_todo_text) {
   if (!db_) {
     return;
   }
 
-  // Update the title of the todo item in the 'todo_items' table
-  std::string updateSQL = "UPDATE todo_items SET title = '" + new_todo_text +
-                          "' WHERE id = " + std::to_string(todo_item_id) + ";";
+  std::string updateSQL =
+      "UPDATE todo_items SET title = '" + new_todo_text +
+      "' WHERE id = " + std::to_string(todo_items_[todo_item_index].GetId()) +
+      ";";
 
   int rc = sqlite3_exec(db_, updateSQL.c_str(), nullptr, nullptr, nullptr);
 
@@ -144,7 +144,7 @@ void TodoList::UpdateTodoItemText(int todo_item_id,
     std::cout << "Error updating todo item: " << sqlite3_errmsg(db_)
               << std::endl;
   } else {
-    // todo_items_[todoItemIndex].SetContent(new_todo_text);
+    todo_items_[todo_item_index].SetText(new_todo_text);
   }
 }
 
@@ -153,7 +153,6 @@ void TodoList::DeleteAllTodoItems() {
     return;
   }
 
-  // Delete all todo items from the 'todo_items' table
   const char *deleteAllSQL = "DELETE FROM todo_items;";
   int rc = sqlite3_exec(db_, deleteAllSQL, nullptr, nullptr, nullptr);
 

@@ -16,7 +16,8 @@ class TodoList {
   void AddTodoItem(const std::string &title);
   void RemoveTodoItem(int todo_item_id);
   void ToggleTodoItemIsCompleted(int todo_item_id);
-  void UpdateTodoItemText(int todo_item_id, const std::string &new_todo_text);
+  void UpdateTodoItemText(int todo_item_index,
+                          const std::string &new_todo_text);
   void DeleteAllTodoItems();
   std::vector<TodoItem> &GetAllTodoItems();
 

@@ -19,7 +19,8 @@ void TodoTui::StartLoop() {
            todo_list_component_ | ftxui::Renderer([&](ftxui::Element element) {
              return todo_list_.GetAllTodoItems().empty() ? ftxui::text("")
                                                          : std::move(element);
-           })}) |
+           }),
+           UpdateTodoForm(), BottomBar()}) |
       ftxui::Renderer([](ftxui::Element element) {
         return ftxui::vbox({ftxui::text("「 kok-s0s's ToDo List 」") |
                                 ftxui::center | ftxui::bold | ftxui::inverted,
@@ -33,7 +34,7 @@ void TodoTui::StartLoop() {
 
 ftxui::Component TodoTui::NewTodoForm() {
   auto new_todo_input =
-      ftxui::Input(&new_todo_text_, "type new todo") |
+      ftxui::Input(&new_todo_text_, "Type new todo") |
       ftxui::Renderer([](ftxui::Element element) {
         return ftxui::hbox(
             {ftxui::text("New Todo: ") | ftxui::bold | ftxui::center,
@@ -88,6 +89,80 @@ ftxui::Component TodoTui::TodoItemComponent(TodoItem todo_item,
                             ftxui::border | ftxui::flex,
                         buttons->Render()});
   });
+}
+
+ftxui::Component TodoTui::UpdateTodoForm() {
+  auto todo_item_index_input =
+      ftxui::Input(&selected_todo_item_index_, "Idx") |
+      ftxui::Renderer([](ftxui::Element element) {
+        return ftxui::hbox({std::move(element)}) |
+               ftxui::size(ftxui::WIDTH, ftxui::EQUAL, 4);
+      });
+
+  auto new_todo_input =
+      ftxui::Input(&update_todo_text_, "Type new todo") |
+      ftxui::Renderer([](ftxui::Element element) {
+        return ftxui::hbox({std::move(element) | ftxui::flex});
+      });
+
+  auto update_todo_button =
+      ftxui::Button(
+          "Update",
+          [&] {
+            if (!update_todo_text_.empty()) {
+              todo_list_.UpdateTodoItemText(
+                  std::stoi(selected_todo_item_index_), update_todo_text_);
+              update_todo_text_ = "";
+              ReloadTodoListComponent();
+            }
+          },
+          ftxui::ButtonOption::Ascii()) |
+      ftxui::color(ftxui::Color::Green) |
+      ftxui::Renderer([](ftxui::Element element) {
+        return ftxui::hbox({std::move(element)});
+      });
+
+  return ftxui::Container::Horizontal({todo_item_index_input,
+                                       new_todo_input | ftxui::flex,
+                                       update_todo_button}) |
+         ftxui::border;
+}
+
+ftxui::Component TodoTui::BottomBar() {
+  auto delete_all_todo_items_button =
+      ftxui::Button(
+          "* Reset *",
+          [&] {
+            todo_list_.DeleteAllTodoItems();
+            ReloadTodoListComponent();
+          },
+          ftxui::ButtonOption::Ascii()) |
+      ftxui::color(ftxui::Color::Red) |
+      ftxui::Renderer([](ftxui::Element element) {
+        return ftxui::hbox({std::move(element)});
+      });
+
+  auto exit_button = ftxui::Button(
+                         "* Exit *",
+                         [&] {
+                           std::cout
+                               << "\033[2J\033[1;1H";  // ANSI escape codes for
+                                                       // clearing the screen.
+                           exit(0);
+                         },
+                         ftxui::ButtonOption::Ascii()) |
+                     ftxui::color(ftxui::Color::Red) |
+                     ftxui::Renderer([](ftxui::Element element) {
+                       return ftxui::hbox({std::move(element)});
+                     });
+
+  auto renderer_non_focusable =
+      ftxui::Renderer([&] { return ftxui::text("Have Fun!") | ftxui::center; });
+
+  return ftxui::Container::Horizontal({delete_all_todo_items_button,
+                                       renderer_non_focusable | ftxui::flex,
+                                       exit_button}) |
+         ftxui::border;
 }
 
 void TodoTui::ReloadTodoListComponent() {
