@@ -1,8 +1,9 @@
-#include "controller/todo_controller.h"
+#include "todo_list.h"
+#include "todo_tui.h"
 
 int main(int argc, char* argv[]) {
-  // TodoController todoController;
-  // todoController.run();
-
+  TodoList todo_list;
+  TodoTui todo_tui(todo_list);
+  todo_tui.StartLoop();
   return 0;
 }
