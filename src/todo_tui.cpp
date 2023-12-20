@@ -4,21 +4,24 @@
 #include <utility>
 #include <vector>
 
-TodoTui::TodoTui(TodoList& todo_list) : todo_list_(todo_list) {
+namespace todo {
+
+Tui::Tui(Controller& todo_controller) : todo_controller_(todo_controller) {
   ReloadTodoListComponent();
 }
 
-TodoTui::~TodoTui() {}
+Tui::~Tui() {}
 
-void TodoTui::StartLoop() {
+void Tui::StartLoop() {
   auto screen = ftxui::ScreenInteractive::FitComponent();
 
   auto layout =
       ftxui::Container::Vertical(
           {NewTodoForm(),
            todo_list_component_ | ftxui::Renderer([&](ftxui::Element element) {
-             return todo_list_.GetAllTodoItems().empty() ? ftxui::text("")
-                                                         : std::move(element);
+             return todo_controller_.GetAllTodoItems().empty()
+                        ? ftxui::text("")
+                        : std::move(element);
            }),
            UpdateTodoForm(), BottomBar()}) |
       ftxui::Renderer([](ftxui::Element element) {
@@ -32,7 +35,7 @@ void TodoTui::StartLoop() {
   screen.Loop(layout);
 }
 
-ftxui::Component TodoTui::NewTodoForm() {
+ftxui::Component Tui::NewTodoForm() {
   auto new_todo_input =
       ftxui::Input(&new_todo_text_, "Type new todo") |
       ftxui::Renderer([](ftxui::Element element) {
@@ -45,7 +48,7 @@ ftxui::Component TodoTui::NewTodoForm() {
                              "Add",
                              [&] {
                                if (!new_todo_text_.empty()) {
-                                 todo_list_.AddTodoItem(new_todo_text_);
+                                 todo_controller_.AddTodoItem(new_todo_text_);
                                  new_todo_text_ = "";
                                  ReloadTodoListComponent();
                                }
@@ -61,21 +64,22 @@ ftxui::Component TodoTui::NewTodoForm() {
          ftxui::border;
 }
 
-ftxui::Component TodoTui::TodoItemComponent(TodoItem todo_item,
-                                            int todo_item_index) {
+ftxui::Component Tui::TodoItemComponent(TodoItem todo_item,
+                                        int todo_item_index) {
   auto completed_button =
-      ftxui::Button(todo_item.IsCompleted() ? " ✓ " : "   ",
-                    [=] {
-                      todo_list_.ToggleTodoItemIsCompleted(todo_item.GetId());
-                      ReloadTodoListComponent();
-                    }) |
-      ftxui::color(todo_item.IsCompleted() ? ftxui::Color::Green
-                                           : ftxui::Color::Blue);
+      ftxui::Button(
+          todo_item.GetCompleted() ? " ✓ " : "   ",
+          [=] {
+            todo_controller_.ToggleTodoItemGetCompleted(todo_item.GetId());
+            ReloadTodoListComponent();
+          }) |
+      ftxui::color(todo_item.GetCompleted() ? ftxui::Color::Green
+                                            : ftxui::Color::Blue);
 
   auto delete_button =
       ftxui::Button("Del",
                     [=] {
-                      todo_list_.RemoveTodoItem(todo_item.GetId());
+                      todo_controller_.RemoveTodoItem(todo_item.GetId());
                       ReloadTodoListComponent();
                     }) |
       ftxui::color(ftxui::Color::Red);
@@ -91,7 +95,7 @@ ftxui::Component TodoTui::TodoItemComponent(TodoItem todo_item,
   });
 }
 
-ftxui::Component TodoTui::UpdateTodoForm() {
+ftxui::Component Tui::UpdateTodoForm() {
   auto todo_item_index_input =
       ftxui::Input(&selected_todo_item_index_, "Idx") |
       ftxui::Renderer([](ftxui::Element element) {
@@ -109,9 +113,12 @@ ftxui::Component TodoTui::UpdateTodoForm() {
       ftxui::Button(
           "Update",
           [&] {
-            if (!update_todo_text_.empty()) {
-              todo_list_.UpdateTodoItemText(
-                  std::stoi(selected_todo_item_index_), update_todo_text_);
+            int todo_item_index = std::stoi(selected_todo_item_index_);
+            if ((todo_item_index >= 0 &&
+                 todo_item_index < todo_controller_.GetAllTodoItems().size()) &&
+                !update_todo_text_.empty()) {
+              todo_controller_.UpdateTodoItemText(todo_item_index,
+                                                  update_todo_text_);
               update_todo_text_ = "";
               ReloadTodoListComponent();
             }
@@ -128,12 +135,12 @@ ftxui::Component TodoTui::UpdateTodoForm() {
          ftxui::border;
 }
 
-ftxui::Component TodoTui::BottomBar() {
+ftxui::Component Tui::BottomBar() {
   auto delete_all_todo_items_button =
       ftxui::Button(
           "* Reset *",
           [&] {
-            todo_list_.DeleteAllTodoItems();
+            todo_controller_.DeleteAllTodoItems();
             ReloadTodoListComponent();
           },
           ftxui::ButtonOption::Ascii()) |
@@ -152,12 +159,14 @@ ftxui::Component TodoTui::BottomBar() {
          ftxui::border;
 }
 
-void TodoTui::ReloadTodoListComponent() {
+void Tui::ReloadTodoListComponent() {
   todo_list_component_->DetachAllChildren();
   int todo_item_index = 0;
-  for (const auto& todo_item : todo_list_.GetAllTodoItems()) {
+  for (const auto& todo_item : todo_controller_.GetAllTodoItems()) {
     auto todo_item_component = TodoItemComponent(todo_item, todo_item_index);
     todo_list_component_->Add(std::move(todo_item_component));
     todo_item_index++;
   }
 }
+
+}  // namespace todo

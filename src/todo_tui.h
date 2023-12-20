@@ -2,13 +2,14 @@
 #define TODO_TUI_H
 
 #include "ftxui/component/component.hpp"
-#include "todo_item.h"
-#include "todo_list.h"
+#include "todo_controller.h"
 
-class TodoTui {
+namespace todo {
+
+class Tui {
  public:
-  explicit TodoTui(TodoList &todo_list);
-  ~TodoTui();
+  explicit Tui(Controller& todo_controller);
+  ~Tui();
 
   void StartLoop();
 
@@ -20,11 +21,12 @@ class TodoTui {
   void ReloadTodoListComponent();
 
  private:
-  TodoList &todo_list_;
+  Controller& todo_controller_;
   std::string new_todo_text_;
   std::string selected_todo_item_index_;
   std::string update_todo_text_;
   ftxui::Component todo_list_component_ = ftxui::Container::Vertical({});
 };
+}  // namespace todo
 
 #endif  // TODO_TUI_H

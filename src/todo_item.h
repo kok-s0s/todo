@@ -3,6 +3,8 @@
 
 #include <string>
 
+namespace todo {
+
 class TodoItem {
  public:
   TodoItem(int id, const std::string &text, bool completed);
@@ -10,7 +12,7 @@ class TodoItem {
   int GetId() const;
   std::string GetText() const;
   void SetText(std::string text);
-  bool IsCompleted() const;
+  bool GetCompleted() const;
   void SetCompleted(bool completed);
 
  private:
@@ -18,5 +20,6 @@ class TodoItem {
   std::string text_;
   bool completed_;
 };
+}  // namespace todo
 
 #endif  // TODO_ITEM_H

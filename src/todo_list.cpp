@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+namespace todo {
+
 TodoList::TodoList() : db_(nullptr) {
   int rc = sqlite3_open("todo_database.db", &db_);
 
@@ -57,13 +59,13 @@ void TodoList::LoadTodoItemsFromDatabase() {
   }
 }
 
-void TodoList::AddTodoItem(const std::string &title) {
+void TodoList::AddTodoItem(const std::string &text) {
   if (!db_) {
     return;
   }
 
   std::string insertSQL =
-      "INSERT INTO todo_items (title, completed) VALUES ('" + title + "', 0);";
+      "INSERT INTO todo_items (title, completed) VALUES ('" + text + "', 0);";
 
   int rc = sqlite3_exec(db_, insertSQL.c_str(), nullptr, nullptr, nullptr);
 
@@ -72,7 +74,7 @@ void TodoList::AddTodoItem(const std::string &title) {
               << std::endl;
   } else {
     int newId = static_cast<int>(sqlite3_last_insert_rowid(db_));
-    todo_items_.emplace_back(newId, title, false);
+    todo_items_.emplace_back(newId, text, false);
   }
 }
 
@@ -98,7 +100,7 @@ void TodoList::RemoveTodoItem(int todo_item_id) {
   }
 }
 
-void TodoList::ToggleTodoItemIsCompleted(int todo_item_id) {
+void TodoList::ToggleTodoItemGetCompleted(int todo_item_id) {
   if (!db_) {
     return;
   }
@@ -110,7 +112,7 @@ void TodoList::ToggleTodoItemIsCompleted(int todo_item_id) {
                    });
 
   if (found_todo_item != todo_items_.end()) {
-    int completed = found_todo_item->IsCompleted() ? 0 : 1;
+    int completed = found_todo_item->GetCompleted() ? 0 : 1;
 
     std::string updateSQL =
         "UPDATE todo_items SET completed = " + std::to_string(completed) +
@@ -122,7 +124,7 @@ void TodoList::ToggleTodoItemIsCompleted(int todo_item_id) {
       std::cout << "Error updating todo item: " << sqlite3_errmsg(db_)
                 << std::endl;
     } else {
-      found_todo_item->SetCompleted(!found_todo_item->IsCompleted());
+      found_todo_item->SetCompleted(!found_todo_item->GetCompleted());
     }
   }
 }
@@ -165,3 +167,5 @@ void TodoList::DeleteAllTodoItems() {
 }
 
 std::vector<TodoItem> &TodoList::GetAllTodoItems() { return todo_items_; }
+
+}  // namespace todo

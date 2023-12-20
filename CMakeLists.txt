@@ -24,6 +24,7 @@ add_executable(${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/src/todo_item.cpp
 	${CMAKE_SOURCE_DIR}/src/todo_list.cpp
 	${CMAKE_SOURCE_DIR}/src/todo_tui.cpp
+	${CMAKE_SOURCE_DIR}/src/todo_controller.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
