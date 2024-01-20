@@ -1,11 +1,31 @@
 #include "todo_list.h"
 
+#include <filesystem>
 #include <iostream>
+
+#if defined(__clang__) || defined(__GNUC__)
+#define CPP_STANDARD __cplusplus
+#elif defined(_MSC_VER)
+#define CPP_STANDARD _MSVC_LANG
+#endif
+
+#if CPP_STANDARD >= 201103L && CPP_STANDARD < 201703L
+#include <cstring>
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#endif
+#if CPP_STANDARD >= 201703L
+#include <filesystem>
+namespace fs = std::filesystem;
+#endif
 
 namespace todo {
 
 TodoList::TodoList() : db_(nullptr) {
-  int rc = sqlite3_open("todo_database.db", &db_);
+  fs::path home_dir =
+      std::getenv("HOME") ? std::getenv("HOME") : std::getenv("USERPROFILE");
+  fs::path todo_db_path = home_dir / "todo_database.db";
+  int rc = sqlite3_open(todo_db_path.c_str(), &db_);
 
   if (rc != SQLITE_OK) {
     std::cout << "Can't open database: " << sqlite3_errmsg(db_) << std::endl;
@@ -92,11 +112,42 @@ void TodoList::RemoveTodoItem(int todo_item_id) {
     std::cout << "Error deleting todo item: " << sqlite3_errmsg(db_)
               << std::endl;
   } else {
-    todo_items_.erase(std::remove_if(todo_items_.begin(), todo_items_.end(),
-                                     [&todo_item_id](const TodoItem &todoItem) {
-                                       return todoItem.GetId() == todo_item_id;
-                                     }),
-                      todo_items_.end());
+    auto found_todo_item =
+        std::find_if(todo_items_.begin(), todo_items_.end(),
+                     [&todo_item_id](const TodoItem &todoItem) {
+                       return todoItem.GetId() == todo_item_id;
+                     });
+
+    if (found_todo_item != todo_items_.end()) {
+      removed_todo_items_.push_back(*found_todo_item);
+      todo_items_.erase(found_todo_item);
+    }
+  }
+}
+
+void TodoList::UndoRemoveTodoItem() {
+  if (!db_) {
+    return;
+  }
+
+  if (!removed_todo_items_.empty()) {
+    const TodoItem &last_removed_item = removed_todo_items_.back();
+
+    std::string insertSQL =
+        "INSERT INTO todo_items (id, title, completed) VALUES (" +
+        std::to_string(last_removed_item.GetId()) + ", '" +
+        last_removed_item.GetText() + "', " +
+        std::to_string(last_removed_item.GetCompleted()) + ");";
+
+    int rc = sqlite3_exec(db_, insertSQL.c_str(), nullptr, nullptr, nullptr);
+
+    if (rc != SQLITE_OK) {
+      std::cout << "Error undoing remove todo item: " << sqlite3_errmsg(db_)
+                << std::endl;
+    } else {
+      todo_items_.push_back(last_removed_item);
+      removed_todo_items_.pop_back();
+    }
   }
 }
 
@@ -162,6 +213,9 @@ void TodoList::DeleteAllTodoItems() {
     std::cout << "Error deleting all todo items: " << sqlite3_errmsg(db_)
               << std::endl;
   } else {
+    for (const auto &todo_item : todo_items_) {
+      removed_todo_items_.push_back(todo_item);
+    }
     todo_items_.clear();
   }
 }

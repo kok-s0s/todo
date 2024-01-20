@@ -12,6 +12,8 @@ void Controller::RemoveTodoItem(int todo_item_id) {
   todo_list_.RemoveTodoItem(todo_item_id);
 }
 
+void Controller::UndoRemoveTodoItem() { todo_list_.UndoRemoveTodoItem(); }
+
 void Controller::ToggleTodoItemGetCompleted(int todo_item_id) {
   todo_list_.ToggleTodoItemGetCompleted(todo_item_id);
 }

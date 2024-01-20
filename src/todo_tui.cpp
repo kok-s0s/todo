@@ -149,12 +149,26 @@ ftxui::Component Tui::BottomBar() {
         return ftxui::hbox({std::move(element)});
       });
 
-  auto renderer_non_focusable =
-      ftxui::Renderer([&] { return ftxui::text("Have Fun!") | ftxui::center; });
+  auto undo_remove_todo_item_button =
+      ftxui::Button(
+          "Undo",
+          [&] {
+            todo_controller_.UndoRemoveTodoItem();
+            ReloadTodoListComponent();
+          },
+          ftxui::ButtonOption::Ascii()) |
+      ftxui::color(ftxui::Color::Blue) |
+      ftxui::Renderer([](ftxui::Element element) {
+        return ftxui::hbox({std::move(element)});
+      });
+
+  auto renderer_non_focusable = ftxui::Renderer(
+      [&] { return ftxui::text("Enjoy your life!") | ftxui::center; });
 
   return ftxui::Container::Horizontal({
              delete_all_todo_items_button,
              renderer_non_focusable | ftxui::flex,
+             undo_remove_todo_item_button,
          }) |
          ftxui::border;
 }

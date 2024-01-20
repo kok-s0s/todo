@@ -11,6 +11,7 @@ class Controller {
 
   void AddTodoItem(const std::string& text);
   void RemoveTodoItem(int todo_item_id);
+  void UndoRemoveTodoItem();
   void ToggleTodoItemGetCompleted(int todo_item_id);
   void UpdateTodoItemText(int todo_item_index,
                           const std::string& new_todo_text);
